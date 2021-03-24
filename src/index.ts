@@ -1,53 +1,53 @@
 import express from 'express';
 import mariadb from 'mariadb';
+import path from 'path';
 
 const app = express();
 const port = 3001;
-const pool = mariadb.createPool({
+
+app.use(express.static(path.join(__dirname, '../', '/public')));
+app.set('views', path.join(__dirname, '../', 'views'))
+app.set('view engine', 'ejs')
+
+app.use((req, res, next) => {
+  console.log(`${Date.now()} [${req.method}] ${req.path}`)
+  next();
+})
+
+app.get('/', (req, res) => {
+  
+  let pool = mariadb.createPool({
     host: 'localhost',
     user: 'FoodPlanningUser',
     password: 'Shaymin',
     database: 'FoodPlanning',
-    connectionLimit: 5
-})
+    socketPath: '/run/mysqld/mysqld.sock'
+  })
 
-pool.getConnection()
+  pool.getConnection()
     .then(conn => {
-    
-/*      conn.query("SELECT 1 as val")
-        .then((rows) => {
-          console.log(rows); //[ {val: 1}, meta: ... ]
-          //Table must have been created before 
-          // " CREATE TABLE myTable (id int, val varchar(255)) "
-          return conn.query("INSERT INTO myTable value (?, ?)", [1, "mariadb"]);
+      conn.query('select * from Ingredient')
+        .then(rows => {
+          console.log(rows.meta);
         })
-        .then((res) => {
-          console.log(res); // { affectedRows: 1, insertId: 1, warningStatus: 0 }
-          conn.end();
+        .then(res => {
+          //console.log(res);
+          conn.release();
         })
         .catch(err => {
-          //handle error
-          console.log(err); 
-          conn.end();
+          console.log(err);
         })
-*/ 
-    }).catch(err => {
-        console.log(err);
-      //not connected
-    });
+    })
 
+  res.render('Index.ejs', {
 
-
-app.use((req, res, next) => {
-    console.log(`${Date.now()} [${req.method}] ${req.path}`)
-    next();
+  });
 })
 
-app.get('/', (req, res) => {
-    res.send('Hello World');
-
-})
+app.post('/', (req, res) => {
+  console.log('jo da ist was angekommen')
+});
 
 app.listen(port, () => {
-    console.log(`Example app listening at http://192.168.0.146:${port}`)
-})
+  console.log(`Example app listening at http://192.168.0.146:${port}`)
+});
