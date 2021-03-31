@@ -1,6 +1,7 @@
 import express from 'express';
 import mariadb from 'mariadb';
 import path from 'path';
+import Ingredient from './router/Ingredient';
 
 const app = express();
 const port = 3001;
@@ -14,33 +15,11 @@ app.use((req, res, next) => {
   next();
 })
 
+app.use('/Zutaten', Ingredient);
+
 app.get('/', (req, res) => {
-  
-  let pool = mariadb.createPool({
-    host: 'localhost',
-    user: 'FoodPlanningUser',
-    password: 'Shaymin',
-    database: 'FoodPlanning',
-    socketPath: '/run/mysqld/mysqld.sock'
-  })
-
-  pool.getConnection()
-    .then(conn => {
-      conn.query('select * from Ingredient')
-        .then(rows => {
-          console.log(rows.meta);
-        })
-        .then(res => {
-          //console.log(res);
-          conn.release();
-        })
-        .catch(err => {
-          console.log(err);
-        })
-    })
-
   res.render('Index.ejs', {
-
+    mainpart: 'Frontpage.ejs'
   });
 })
 
