@@ -55,7 +55,7 @@
                 <% if (mainpart =='Frontpage.ejs') {%>
                     <%- include(mainpart)%>
                 <% }else if (mainpart == 'AddIngredient.ejs'){ %> 
-                    <%- include(mainpart, {UnitOfMeasurement: UnitOfMeasurement})%>
+                    <%- include(mainpart, {UnitOfMeasurement: UnitOfMeasurement, Category: Category})%>
                 <% } %>
             </div>
         </div>

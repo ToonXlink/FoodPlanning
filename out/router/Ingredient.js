@@ -49,17 +49,35 @@ router
     .use(urlencoded, express_1.default.json())
     .route('/')
     .get(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        console.log(data.getUnitOfMeasurement());
-        res.render('Index.ejs', {
-            mainpart: 'AddIngredient.ejs',
-            UnitOfMeasurement: data.getUnitOfMeasurement()
-        });
-        return [2 /*return*/];
+    var _a, _b, _c;
+    var _d;
+    return __generator(this, function (_e) {
+        switch (_e.label) {
+            case 0:
+                _b = (_a = res).render;
+                _c = ['Index.ejs'];
+                _d = {
+                    mainpart: 'AddIngredient.ejs'
+                };
+                return [4 /*yield*/, data.getUnitOfMeasurement()];
+            case 1:
+                _d.UnitOfMeasurement = _e.sent();
+                return [4 /*yield*/, data.getIngredientCategory()];
+            case 2:
+                _b.apply(_a, _c.concat([(_d.Category = _e.sent(),
+                        _d)]));
+                return [2 /*return*/];
+        }
     });
 }); })
     .post(function (req, res) {
-    console.log(res);
+    console.log(req.body);
+    if (req.body.InputDescription != '' && req.body.UnitOfMeasurement != '' && req.body.AmountOnStock != '' && req.body.Category != '' && req.body.SearchName != '') {
+        data.AddIngredient(req.body);
+    }
+    else {
+        res.status(418).send("Sry but your Input is wrong");
+    }
     res.redirect('/');
 });
 exports.default = router;

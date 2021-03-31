@@ -25,7 +25,8 @@
                     <label for="InputDescription">Bezeichnung</label>
                 </div>
                 <div class="col-5">
-                    <input type="text" class="form-control" id="InputDescription" name="InputDescription" required onchange="ChangeSearchName()">
+                    <input type="text" class="form-control" id="InputDescription" name="InputDescription" required
+                        onchange="ChangeSearchName()">
                 </div>
             </div>
 
@@ -33,12 +34,17 @@
                 <div class="col-2">
                     <label for="UnitOfMeasurement ">Masseinheit</label>
                 </div>
-                <div class="col-5">
+                <div class="col-2">
+                    <label></label>
+                </div>
+                <div class="col-3">
                     <select name="UnitOfMeasurement" id="UnitOfMeasurement" class="form-control" required>
                         <option selected disabled hidden style='display: none' value=''></option>
-                        <% for(var i = 0; i < UnitOfMeasurement.length; i++){%>
-                            <option value="<%= UnitOfMeasurement[i].ID%>"><%=UnitOfMeasurement[i].Unit%></option>
-                        <% }; %> 
+                        <% for(var i=0; i < UnitOfMeasurement.length; i++){%>
+                            <option value="<%= UnitOfMeasurement[i].ID%>" style="text-align: right;">
+                                <%=UnitOfMeasurement[i].Unit%>
+                            </option>
+                            <% }; %>
                     </select>
                 </div>
             </div>
@@ -59,11 +65,17 @@
                 <div class="col-2">
                     <label for="Category">Kategorie</label>
                 </div>
-                <div class="col-5">
+                <div class="col-2">
+                    <label></label>
+                </div>
+                <div class="col-3">
                     <select name="Category" id="Category" class="form-control" autofocus required>
                         <option selected disabled hidden style='display: none' value=''></option>
-                        <option value="0">Test1</option>
-                        <option value="1">Test2</option>
+                        <% for(var i=0; i < Category.length; i++){%>
+                            <option value="<%= Category[i].ID%>" style="text-align: right;">
+                                <%=Category[i].CATEGORY%>
+                            </option>
+                            <% }; %>
                     </select>
                 </div>
             </div>

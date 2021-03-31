@@ -1,0 +1,66 @@
+CREATE TABLE Ingredient (
+ID INT AUTO_INCREMENT PRIMARY KEY,
+Description VARCHAR(255) NOT NULL,
+UnitOfMeasurement INT NOT NULL,
+FOREIGN KEY (UnitOfMeasurement) REFERENCES Unit_of_Measurement(ID),
+Amount_on_Stock DECIMAL (10, 3) NOT NULL,
+Category INT NOT NULL,
+FOREIGN KEY (Category) REFERENCES Ingredient_Category(ID),
+Searchname VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE Ingredient_Category(
+ID INT AUTO_INCREMENT PRIMARY KEY,
+CATEGORY VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE Ingredient_Ledger_Entry (
+ID INT AUTO_INCREMENT PRIMARY KEY,
+Description VARCHAR(255) NOT NULL,
+Amount DECIMAL (10, 3) NOT NULL
+);
+
+CREATE TABLE Ingredients_in_Recipe(
+ID INT AUTO_INCREMENT,
+Recipe_ID INT NOT NULL,
+FOREIGN KEY (Recipe_ID) REFERENCES Recipe (ID),
+PRIMARY KEY(ID, Recipe_ID),
+Ingredient_ID INT NOT NULL,
+FOREIGN KEY (Ingredient_ID) REFERENCES Ingredient (ID),
+Amount DECIMAL (10, 3) NOT NULL,
+UnitOfMeasurement INT NOT NULL,
+FOREIGN KEY (UnitOfMeasurement) REFERENCES Unit_of_Measurement(ID),
+Comment VARCHAR(255)
+);
+
+CREATE TABLE Recipe (
+ID INT AUTO_INCREMENT PRIMARY KEY,
+Name VARCHAR(255) NOT NULL,
+Image VARCHAR(255),
+Preparation TEXT
+);
+
+CREATE TABLE Recipe_in_Category(
+ID INT AUTO_INCREMENT PRIMARY KEY,
+Recipe_ID INT NOT NULL,
+FOREIGN KEY (Recipe_ID) REFERENCES Recipe(ID),
+Category INT NOT NULL,
+FOREIGN KEY (Category) REFERENCES Recipe_Category(ID)
+);
+
+CREATE TABLE Recipe_Category(
+ID INT AUTO_INCREMENT PRIMARY KEY,
+CATEGORY VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE Unit_of_Measurement(
+ID INT AUTO_INCREMENT PRIMARY KEY,
+Unit VARCHAR(255) NOT NULL,
+Mass INT,
+Volume INT
+);
+__________________________________________________________________
+Category ENUM ('Gemüse', 'Obst', 'Soßen', 'Fleisch', 'Gewürze', 'Fertigprodukte', 'Fisch', 'Brotaufstrich', 'Getreide', 'Tiefkühlprodukte', 'Eierprodukte', 'Fette/ Öle') NOT NULL,
+
+Unit_of_Measurement ENUM('Packungen', 'Flaschen', 'Dosen', 'g', 'l', 'Tüten', 'Stück', 'Bünde') NOT NULL,
+Category ENUM ('Fisch', 'Geflügel', 'Hülsenfrüchte', 'Paste & Nudeln', 'Pizza', 'Rind', 'Schwein', 'Reis') NOT NULL

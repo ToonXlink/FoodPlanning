@@ -47,36 +47,129 @@ var Data = /** @class */ (function () {
     Data.getInstance = function () {
         return this.instance;
     };
+    /*Get Enum Tables*/
     Data.prototype.getUnitOfMeasurement = function () {
         return __awaiter(this, void 0, void 0, function () {
             var result, pool;
+            var _this = this;
             return __generator(this, function (_a) {
-                result = [];
-                pool = mariadb_1.default.createPool({
-                    host: 'localhost',
-                    user: 'FoodPlanningUser',
-                    password: 'Shaymin',
-                    database: 'FoodPlanning',
-                    socketPath: '/run/mysqld/mysqld.sock'
-                })
-                    .getConnection()
-                    .then(function (conn) {
-                    conn.query('select * from Unit_of_Measurement')
-                        .then(function (rows) {
-                        rows.forEach(function (record) {
-                            result.push(record);
-                        });
-                    })
-                        .then(function (res) {
-                        conn.release();
-                        return result;
-                    })
-                        .catch(function (err) {
-                        console.log(err);
-                        return [];
-                    });
-                });
-                return [2 /*return*/];
+                switch (_a.label) {
+                    case 0:
+                        result = [];
+                        return [4 /*yield*/, mariadb_1.default.createPool({
+                                host: 'localhost',
+                                user: 'FoodPlanningUser',
+                                password: 'Shaymin',
+                                database: 'FoodPlanning',
+                                socketPath: '/run/mysqld/mysqld.sock'
+                            })
+                                .getConnection()
+                                .then(function (conn) { return __awaiter(_this, void 0, void 0, function () {
+                                var _this = this;
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0: return [4 /*yield*/, conn.query('SELECT * FROM Unit_of_Measurement;')
+                                                .then(function (rows) { return __awaiter(_this, void 0, void 0, function () {
+                                                return __generator(this, function (_a) {
+                                                    rows.forEach(function (record) {
+                                                        result.push(record);
+                                                    });
+                                                    return [2 /*return*/];
+                                                });
+                                            }); })
+                                                .then(function (res) { return __awaiter(_this, void 0, void 0, function () {
+                                                return __generator(this, function (_a) {
+                                                    conn.release();
+                                                    return [2 /*return*/, result];
+                                                });
+                                            }); })
+                                                .catch(function (err) {
+                                                console.log(err);
+                                                return [];
+                                            })];
+                                        case 1:
+                                            _a.sent();
+                                            return [2 /*return*/];
+                                    }
+                                });
+                            }); })];
+                    case 1:
+                        pool = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    Data.prototype.getIngredientCategory = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var result, pool;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        result = [];
+                        return [4 /*yield*/, mariadb_1.default.createPool({
+                                host: 'localhost',
+                                user: 'FoodPlanningUser',
+                                password: 'Shaymin',
+                                database: 'FoodPlanning',
+                                socketPath: '/run/mysqld/mysqld.sock'
+                            })
+                                .getConnection()
+                                .then(function (conn) { return __awaiter(_this, void 0, void 0, function () {
+                                var _this = this;
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0: return [4 /*yield*/, conn.query('select * from Ingredient_Category')
+                                                .then(function (rows) { return __awaiter(_this, void 0, void 0, function () {
+                                                return __generator(this, function (_a) {
+                                                    rows.forEach(function (record) {
+                                                        result.push(record);
+                                                    });
+                                                    return [2 /*return*/];
+                                                });
+                                            }); })
+                                                .then(function (res) { return __awaiter(_this, void 0, void 0, function () {
+                                                return __generator(this, function (_a) {
+                                                    conn.release();
+                                                    return [2 /*return*/, result];
+                                                });
+                                            }); })
+                                                .catch(function (err) {
+                                                console.log(err);
+                                                return [];
+                                            })];
+                                        case 1:
+                                            _a.sent();
+                                            return [2 /*return*/];
+                                    }
+                                });
+                            }); })];
+                    case 1:
+                        pool = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    /*Ingredients*/
+    Data.prototype.AddIngredient = function (req) {
+        var values = '\'' + req.InputDescription + '\'' + ', ' + '\'' + req.UnitOfMeasurement + '\'' + ', ' + '\'' + req.AmountOnStock + '\'' + ', ' + '\'' + req.Category + '\'' + ', ' + '\'' + req.SearchName.toUpperCase() + '\'';
+        var pool = mariadb_1.default.createPool({
+            host: 'localhost',
+            user: 'FoodPlanningUser',
+            password: 'Shaymin',
+            database: 'FoodPlanning',
+            socketPath: '/run/mysqld/mysqld.sock'
+        })
+            .getConnection()
+            .then(function (conn) {
+            conn.query('INSERT INTO Ingredient(Description, UnitOfMeasurement, Amount_on_Stock, Category, Searchname) Values(' + values + ')')
+                .then(function (res) {
+                conn.release();
+            })
+                .catch(function (err) {
+                console.log(err);
             });
         });
     };
