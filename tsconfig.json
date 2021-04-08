@@ -70,6 +70,12 @@
   },
 
   "files": [
-    "src/index.ts"
+    "src/index.ts",
+
+    "src/models/Data.ts",
+
+    "src/router/Recipe.ts",
+    "src/router/Ingredient.ts",
+    "src/router/Purchase.ts"
   ]
 }

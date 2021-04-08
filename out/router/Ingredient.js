@@ -40,6 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
+var path_1 = __importDefault(require("path"));
 var body_parser_1 = __importDefault(require("body-parser"));
 var Data_1 = require("../models/Data");
 var router = express_1.default.Router();
@@ -48,25 +49,49 @@ var urlencoded = body_parser_1.default.urlencoded({ extended: true });
 router
     .use(urlencoded, express_1.default.json())
     .route('/')
+    .get(function (req, res) {
+    res.redirect('/Zutaten/0');
+})
+    .post(function (req, res) {
+    console.log(req);
+    console.log(res);
+});
+router
+    .use(express_1.default.static(path_1.default.join(__dirname, '../../', '/public')))
+    .use(express_1.default.static(path_1.default.join(__dirname, '../../../', '/public')))
+    .route('/:Category/:Site')
     .get(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, _b, _c;
     var _d;
     return __generator(this, function (_e) {
         switch (_e.label) {
             case 0:
+                if (!(Number(req.params.Site) != NaN && Number(req.params.Site) >= 0)) return [3 /*break*/, 5];
                 _b = (_a = res).render;
                 _c = ['Index.ejs'];
                 _d = {
-                    mainpart: 'AddIngredient.ejs'
+                    mainpart: 'Ingredient.ejs'
                 };
-                return [4 /*yield*/, data.getUnitOfMeasurement()];
+                return [4 /*yield*/, data.GetIngredientList(Number(req.params.Site), 10, Number(req.params.Category))];
             case 1:
+                _d.IngredientList = _e.sent();
+                return [4 /*yield*/, data.getUnitOfMeasurement()];
+            case 2:
                 _d.UnitOfMeasurement = _e.sent();
                 return [4 /*yield*/, data.getIngredientCategory()];
-            case 2:
-                _b.apply(_a, _c.concat([(_d.Category = _e.sent(),
+            case 3:
+                _d.Category = _e.sent(),
+                    _d.NoRows = 10,
+                    _d.Site = req.params.Site;
+                return [4 /*yield*/, data.GetIngredientCount(Number(req.params.Category))];
+            case 4:
+                _b.apply(_a, _c.concat([(_d.Count = _e.sent(),
                         _d)]));
-                return [2 /*return*/];
+                return [3 /*break*/, 6];
+            case 5:
+                res.redirect('/Zutaten/0');
+                _e.label = 6;
+            case 6: return [2 /*return*/];
         }
     });
 }); })
@@ -78,6 +103,54 @@ router
     else {
         res.status(418).send("Sry but your Input is wrong");
     }
-    res.redirect('/');
+    res.redirect('/Zutaten/' + req.params.Site);
+});
+router
+    .use(express_1.default.static(path_1.default.join(__dirname, '../../', '/public')))
+    .route('/:Site')
+    .get(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, _b, _c;
+    var _d;
+    return __generator(this, function (_e) {
+        switch (_e.label) {
+            case 0:
+                if (!(Number(req.params.Site) != NaN && Number(req.params.Site) >= 0)) return [3 /*break*/, 5];
+                _b = (_a = res).render;
+                _c = ['Index.ejs'];
+                _d = {
+                    mainpart: 'Ingredient.ejs'
+                };
+                return [4 /*yield*/, data.GetIngredientList(Number(req.params.Site), 10)];
+            case 1:
+                _d.IngredientList = _e.sent();
+                return [4 /*yield*/, data.getUnitOfMeasurement()];
+            case 2:
+                _d.UnitOfMeasurement = _e.sent();
+                return [4 /*yield*/, data.getIngredientCategory()];
+            case 3:
+                _d.Category = _e.sent(),
+                    _d.NoRows = 10,
+                    _d.Site = req.params.Site;
+                return [4 /*yield*/, data.GetIngredientCount()];
+            case 4:
+                _b.apply(_a, _c.concat([(_d.Count = _e.sent(),
+                        _d)]));
+                return [3 /*break*/, 6];
+            case 5:
+                res.redirect('/Zutaten/0');
+                _e.label = 6;
+            case 6: return [2 /*return*/];
+        }
+    });
+}); })
+    .post(function (req, res) {
+    console.log(req.body);
+    if (req.body.InputDescription != '' && req.body.UnitOfMeasurement != '' && req.body.AmountOnStock != '' && req.body.Category != '' && req.body.SearchName != '') {
+        data.AddIngredient(req.body);
+    }
+    else {
+        res.status(418).send("Sry but your Input is wrong");
+    }
+    res.redirect('/Zutaten/' + req.params.Site);
 });
 exports.default = router;

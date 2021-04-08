@@ -40,25 +40,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
-var path_1 = __importDefault(require("path"));
-var Data_1 = require("./models/Data");
-var Ingredient_1 = __importDefault(require("./router/Ingredient"));
-var Purchase_1 = __importDefault(require("./router/Purchase"));
-var Recipe_1 = __importDefault(require("./router/Recipe"));
-var app = express_1.default();
-var port = 3001;
+var body_parser_1 = __importDefault(require("body-parser"));
+var Data_1 = require("../models/Data");
+var router = express_1.default.Router();
 var data = Data_1.Data.getInstance();
-app.use(express_1.default.static(path_1.default.join(__dirname, '../', '/public')));
-app.set('views', path_1.default.join(__dirname, '../', 'views'));
-app.set('view engine', 'ejs');
-app.use(function (req, res, next) {
-    console.log(Date.now() + " [" + req.method + "] " + req.path);
-    next();
-});
-app.use('/Zutaten', Ingredient_1.default);
-app.use('/Einkauf', Purchase_1.default);
-app.use('/Rezepte', Recipe_1.default);
-app.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+var urlencoded = body_parser_1.default.urlencoded({ extended: true });
+router
+    .use(urlencoded, express_1.default.json())
+    .route('/')
+    .get(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, _b, _c;
     var _d;
     return __generator(this, function (_e) {
@@ -67,19 +57,24 @@ app.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, func
                 _b = (_a = res).render;
                 _c = ['Index.ejs'];
                 _d = {
-                    mainpart: 'Frontpage.ejs'
+                    mainpart: 'Purchase.ejs'
                 };
-                return [4 /*yield*/, data.getIngredientCategory()];
+                return [4 /*yield*/, data.GetIngredientList(Number(req.params.Site))];
             case 1:
-                _b.apply(_a, _c.concat([(_d.Category = _e.sent(),
+                _d.IngredientList = _e.sent();
+                return [4 /*yield*/, data.getIngredientCategory()];
+            case 2:
+                _d.Category = _e.sent();
+                return [4 /*yield*/, data.getUnitOfMeasurement()];
+            case 3:
+                _b.apply(_a, _c.concat([(_d.UnitOfMeasurement = _e.sent(),
                         _d)]));
                 return [2 /*return*/];
         }
     });
-}); });
-app.post('/', function (req, res) {
-    console.log('jo da ist was angekommen');
+}); })
+    .post(function (req, res) {
+    console.log(req);
+    console.log(res);
 });
-app.listen(port, function () {
-    console.log("Example app listening at http://192.168.0.146:" + port);
-});
+exports.default = router;

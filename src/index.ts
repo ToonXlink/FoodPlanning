@@ -1,10 +1,13 @@
 import express from 'express';
-import mariadb from 'mariadb';
 import path from 'path';
+import {Data} from './models/Data';
 import Ingredient from './router/Ingredient';
+import Purchase from './router/Purchase';
+import Recipe from './router/Recipe';
 
 const app = express();
 const port = 3001;
+const data = Data.getInstance();
 
 app.use(express.static(path.join(__dirname, '../', '/public')));
 app.set('views', path.join(__dirname, '../', 'views'))
@@ -16,10 +19,13 @@ app.use((req, res, next) => {
 })
 
 app.use('/Zutaten', Ingredient);
+app.use('/Einkauf', Purchase);
+app.use('/Rezepte', Recipe);
 
-app.get('/', (req, res) => {
+app.get('/',async (req, res) => {
   res.render('Index.ejs', {
-    mainpart: 'Frontpage.ejs'
+    mainpart: 'Frontpage.ejs',
+    Category: await data.getIngredientCategory()
   });
 })
 

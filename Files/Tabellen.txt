@@ -64,3 +64,5 @@ Category ENUM ('Gemüse', 'Obst', 'Soßen', 'Fleisch', 'Gewürze', 'Fertigproduk
 
 Unit_of_Measurement ENUM('Packungen', 'Flaschen', 'Dosen', 'g', 'l', 'Tüten', 'Stück', 'Bünde') NOT NULL,
 Category ENUM ('Fisch', 'Geflügel', 'Hülsenfrüchte', 'Paste & Nudeln', 'Pizza', 'Rind', 'Schwein', 'Reis') NOT NULL
+
+https://www.youtube.com/watch?v=tkN9Thygl0c

@@ -43,6 +43,14 @@ exports.Data = void 0;
 var mariadb_1 = __importDefault(require("mariadb"));
 var Data = /** @class */ (function () {
     function Data() {
+        this.pool = mariadb_1.default.createPool({
+            host: 'localhost',
+            user: 'FoodPlanningUser',
+            password: 'Shaymin',
+            database: 'FoodPlanning',
+            socketPath: '/run/mysqld/mysqld.sock',
+            connectionLimit: 20
+        });
     }
     Data.getInstance = function () {
         return this.instance;
@@ -50,51 +58,17 @@ var Data = /** @class */ (function () {
     /*Get Enum Tables*/
     Data.prototype.getUnitOfMeasurement = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var result, pool;
-            var _this = this;
+            var result, rows;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         result = [];
-                        return [4 /*yield*/, mariadb_1.default.createPool({
-                                host: 'localhost',
-                                user: 'FoodPlanningUser',
-                                password: 'Shaymin',
-                                database: 'FoodPlanning',
-                                socketPath: '/run/mysqld/mysqld.sock'
-                            })
-                                .getConnection()
-                                .then(function (conn) { return __awaiter(_this, void 0, void 0, function () {
-                                var _this = this;
-                                return __generator(this, function (_a) {
-                                    switch (_a.label) {
-                                        case 0: return [4 /*yield*/, conn.query('SELECT * FROM Unit_of_Measurement;')
-                                                .then(function (rows) { return __awaiter(_this, void 0, void 0, function () {
-                                                return __generator(this, function (_a) {
-                                                    rows.forEach(function (record) {
-                                                        result.push(record);
-                                                    });
-                                                    return [2 /*return*/];
-                                                });
-                                            }); })
-                                                .then(function (res) { return __awaiter(_this, void 0, void 0, function () {
-                                                return __generator(this, function (_a) {
-                                                    conn.release();
-                                                    return [2 /*return*/, result];
-                                                });
-                                            }); })
-                                                .catch(function (err) {
-                                                console.log(err);
-                                                return [];
-                                            })];
-                                        case 1:
-                                            _a.sent();
-                                            return [2 /*return*/];
-                                    }
-                                });
-                            }); })];
+                        return [4 /*yield*/, this.pool.query('SELECT * FROM Unit_of_Measurement;')];
                     case 1:
-                        pool = _a.sent();
+                        rows = _a.sent();
+                        rows.forEach(function (record) {
+                            result.push(record);
+                        });
                         return [2 /*return*/, result];
                 }
             });
@@ -102,51 +76,17 @@ var Data = /** @class */ (function () {
     };
     Data.prototype.getIngredientCategory = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var result, pool;
-            var _this = this;
+            var result, rows;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         result = [];
-                        return [4 /*yield*/, mariadb_1.default.createPool({
-                                host: 'localhost',
-                                user: 'FoodPlanningUser',
-                                password: 'Shaymin',
-                                database: 'FoodPlanning',
-                                socketPath: '/run/mysqld/mysqld.sock'
-                            })
-                                .getConnection()
-                                .then(function (conn) { return __awaiter(_this, void 0, void 0, function () {
-                                var _this = this;
-                                return __generator(this, function (_a) {
-                                    switch (_a.label) {
-                                        case 0: return [4 /*yield*/, conn.query('select * from Ingredient_Category')
-                                                .then(function (rows) { return __awaiter(_this, void 0, void 0, function () {
-                                                return __generator(this, function (_a) {
-                                                    rows.forEach(function (record) {
-                                                        result.push(record);
-                                                    });
-                                                    return [2 /*return*/];
-                                                });
-                                            }); })
-                                                .then(function (res) { return __awaiter(_this, void 0, void 0, function () {
-                                                return __generator(this, function (_a) {
-                                                    conn.release();
-                                                    return [2 /*return*/, result];
-                                                });
-                                            }); })
-                                                .catch(function (err) {
-                                                console.log(err);
-                                                return [];
-                                            })];
-                                        case 1:
-                                            _a.sent();
-                                            return [2 /*return*/];
-                                    }
-                                });
-                            }); })];
+                        return [4 /*yield*/, this.pool.query('select * from Ingredient_Category')];
                     case 1:
-                        pool = _a.sent();
+                        rows = _a.sent();
+                        rows.forEach(function (record) {
+                            result.push(record);
+                        });
                         return [2 /*return*/, result];
                 }
             });
@@ -154,22 +94,85 @@ var Data = /** @class */ (function () {
     };
     /*Ingredients*/
     Data.prototype.AddIngredient = function (req) {
-        var values = '\'' + req.InputDescription + '\'' + ', ' + '\'' + req.UnitOfMeasurement + '\'' + ', ' + '\'' + req.AmountOnStock + '\'' + ', ' + '\'' + req.Category + '\'' + ', ' + '\'' + req.SearchName.toUpperCase() + '\'';
-        var pool = mariadb_1.default.createPool({
-            host: 'localhost',
-            user: 'FoodPlanningUser',
-            password: 'Shaymin',
-            database: 'FoodPlanning',
-            socketPath: '/run/mysqld/mysqld.sock'
-        })
-            .getConnection()
-            .then(function (conn) {
-            conn.query('INSERT INTO Ingredient(Description, UnitOfMeasurement, Amount_on_Stock, Category, Searchname) Values(' + values + ')')
-                .then(function (res) {
-                conn.release();
-            })
-                .catch(function (err) {
-                console.log(err);
+        return __awaiter(this, void 0, void 0, function () {
+            var values;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        values = '\'' + req.InputDescription + '\'' + ', ' + '\'' + req.UnitOfMeasurement + '\'' + ', ' + '\'' + req.AmountOnStock + '\'' + ', ' + '\'' + req.Category + '\'' + ', ' + '\'' + req.SearchName.toUpperCase() + '\'';
+                        return [4 /*yield*/, this.pool.query('INSERT INTO Ingredient(Description, UnitOfMeasurement, Amount_on_Stock, Category, Searchname) Values(' + values + ')')];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    Data.prototype.GetIngredientList = function (Site, NoPerSite, category) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result, rows, i, rows, i, rows, i;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        result = [];
+                        if (!(category == null)) return [3 /*break*/, 2];
+                        return [4 /*yield*/, this.pool.query('SELECT * FROM Ingredient ORDER BY Description')];
+                    case 1:
+                        rows = _a.sent();
+                        for (i = Site * NoPerSite; i < (Site + 1) * NoPerSite; i++) {
+                            if (i < rows.length) {
+                                result.push(rows[i]);
+                            }
+                            else {
+                                break;
+                            }
+                        }
+                        return [3 /*break*/, 6];
+                    case 2:
+                        if (!(category == null && NoPerSite == null)) return [3 /*break*/, 4];
+                        return [4 /*yield*/, this.pool.query('SELECT * FROM Ingredient ORDER BY Description')];
+                    case 3:
+                        rows = _a.sent();
+                        for (i = 0; i < rows.length; i++) {
+                            result.push(rows[i]);
+                        }
+                        return [3 /*break*/, 6];
+                    case 4: return [4 /*yield*/, this.pool.query('SELECT * FROM Ingredient WHERE Category = ' + category + ' ORDER BY Description ')];
+                    case 5:
+                        rows = _a.sent();
+                        for (i = Site * NoPerSite; i < (Site + 1) * NoPerSite; i++) {
+                            if (i < rows.length) {
+                                result.push(rows[i]);
+                            }
+                            else {
+                                break;
+                            }
+                        }
+                        _a.label = 6;
+                    case 6: return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    Data.prototype.GetIngredientCount = function (category) {
+        return __awaiter(this, void 0, void 0, function () {
+            var rows, count, rows, count;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!(category == null)) return [3 /*break*/, 2];
+                        return [4 /*yield*/, this.pool.query('SELECT COUNT(ID) as count FROM Ingredient')];
+                    case 1:
+                        rows = _a.sent();
+                        count = rows[0].count;
+                        return [3 /*break*/, 4];
+                    case 2: return [4 /*yield*/, this.pool.query('SELECT COUNT(ID) as count FROM Ingredient WHERE Category = ' + category)];
+                    case 3:
+                        rows = _a.sent();
+                        count = rows[0].count;
+                        _a.label = 4;
+                    case 4: return [2 /*return*/, count];
+                }
             });
         });
     };
