@@ -39,7 +39,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Data = void 0;
 var mariadb_1 = __importDefault(require("mariadb"));
 var Data = /** @class */ (function () {
     function Data() {
@@ -172,6 +171,86 @@ var Data = /** @class */ (function () {
                         count = rows[0].count;
                         _a.label = 4;
                     case 4: return [2 /*return*/, count];
+                }
+            });
+        });
+    };
+    Data.prototype.UpdateIngredient = function (Ingredient) {
+        return __awaiter(this, void 0, void 0, function () {
+            var values;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        values = 'UPDATE Ingredient SET Description = ' + '\'' + Ingredient.InputDescription + '\'' +
+                            ', UnitOfMeasurement = ' + '\'' + Ingredient.UnitOfMeasurement + '\'' +
+                            ', Amount_on_Stock = ' + '\'' + Ingredient.AmountOnStock + '\'' +
+                            ', Category = ' + '\'' + Ingredient.Category + '\'' +
+                            ', Searchname = ' + '\'' + Ingredient.SearchName + '\'' +
+                            ' WHERE ID = ' + Ingredient.IngredientID;
+                        return [4 /*yield*/, this.pool.query(values)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    Data.prototype.AddIngredientAmount = function (Ingredient) {
+        return __awaiter(this, void 0, void 0, function () {
+            var amount, values;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        amount = Number(Ingredient.Amount_on_Stock) + Number(Ingredient.AddIngredientModalAmount);
+                        values = 'UPDATE Ingredient SET' +
+                            ' Amount_on_Stock = ' + '\'' + amount + '\'' +
+                            ' WHERE ID = ' + Ingredient.IngredientID;
+                        return [4 /*yield*/, this.pool.query(values)];
+                    case 1:
+                        _a.sent();
+                        values = 'INSERT INTO Ingredient_Ledger_Entry (Ingredient_ID, Description, Amount) Values(\'' + Ingredient.IngredientID + '\', ' + '\'' + Ingredient.Description + '\', ' + '\'' + Ingredient.AddIngredientModalAmount + '\')';
+                        return [4 /*yield*/, this.pool.query(values)];
+                    case 2:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    Data.prototype.SubtractIngredientAmount = function (Ingredient) {
+        return __awaiter(this, void 0, void 0, function () {
+            var amount, values;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        amount = Number(Ingredient.Amount_on_Stock) - Number(Ingredient.subtractIngredientModalAmount);
+                        values = 'UPDATE Ingredient SET' +
+                            ' Amount_on_Stock = ' + '\'' + amount + '\'' +
+                            ' WHERE ID = ' + Ingredient.IngredientID;
+                        return [4 /*yield*/, this.pool.query(values)];
+                    case 1:
+                        _a.sent();
+                        values = 'INSERT INTO Ingredient_Ledger_Entry (Ingredient_ID, Description, Amount) Values(\'' + Ingredient.IngredientID + '\', ' + '\'' + Ingredient.Description + '\', ' + '\'' + Number(Ingredient.subtractIngredientModalAmount * -1) + '\')';
+                        return [4 /*yield*/, this.pool.query(values)];
+                    case 2:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    //
+    Data.prototype.GetIngredient = function (ID) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result, rows;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        console.log(ID + '      ' + typeof (ID));
+                        return [4 /*yield*/, this.pool.query('SELECT * FROM Ingredient WHERE ID = ' + (ID + 1))];
+                    case 1:
+                        rows = _a.sent();
+                        return [2 /*return*/, rows];
                 }
             });
         });

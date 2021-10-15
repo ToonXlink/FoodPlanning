@@ -49,8 +49,7 @@ router
     .use(urlencoded, express_1.default.json())
     .route('/')
     .get(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, _b, _c;
-    var _d;
+    var _a, _b, _c, _d;
     return __generator(this, function (_e) {
         switch (_e.label) {
             case 0:

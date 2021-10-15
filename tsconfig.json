@@ -76,6 +76,7 @@
 
     "src/router/Recipe.ts",
     "src/router/Ingredient.ts",
-    "src/router/Purchase.ts"
+    "src/router/Purchase.ts",
+    "src/router/Data.ts"
   ]
 }

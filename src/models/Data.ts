@@ -51,7 +51,6 @@ export class Data {
         var result: Object[] = [];
         if (category == null) {
             var rows = await this.pool.query('SELECT * FROM Ingredient ORDER BY Description');
-
             for (var i = Site * NoPerSite; i < (Site + 1) * NoPerSite; i++) {
                 if (i < rows.length) {
                     result.push(rows[i])
@@ -90,5 +89,46 @@ export class Data {
         }
 
         return count;
+    }
+
+    public async UpdateIngredient(Ingredient: any): Promise <any>{
+        let values = 'UPDATE Ingredient SET Description = ' + '\''+ Ingredient.InputDescription + '\'' + 
+        ', UnitOfMeasurement = ' + '\''+ Ingredient.UnitOfMeasurement + '\'' + 
+        ', Amount_on_Stock = ' + '\''+ Ingredient.AmountOnStock + '\'' + 
+        ', Category = ' + '\'' + Ingredient.Category + '\'' + 
+        ', Searchname = ' + '\'' + Ingredient.SearchName + '\'' +
+        ' WHERE ID = ' + Ingredient.IngredientID;
+        await this.pool.query(values);
+    }
+
+    public async AddIngredientAmount(Ingredient: any): Promise <any>{
+        let amount: number = Number(Ingredient.Amount_on_Stock) + Number(Ingredient.AddIngredientModalAmount);
+        let values = 'UPDATE Ingredient SET' +
+        ' Amount_on_Stock = ' + '\''+ amount + '\'' + 
+        ' WHERE ID = ' + Ingredient.IngredientID;
+        await this.pool.query(values);
+
+        values = 'INSERT INTO Ingredient_Ledger_Entry (Ingredient_ID, Description, Amount) Values(\'' + Ingredient.IngredientID + '\', ' + '\'' + Ingredient.Description + '\', ' + '\'' + Ingredient.AddIngredientModalAmount + '\')';
+        await this.pool.query(values);
+    }
+
+    public async SubtractIngredientAmount(Ingredient: any): Promise <any>{
+        let amount: number = Number(Ingredient.Amount_on_Stock) - Number(Ingredient.subtractIngredientModalAmount);
+        let values = 'UPDATE Ingredient SET' +
+        ' Amount_on_Stock = ' + '\''+ amount + '\'' + 
+        ' WHERE ID = ' + Ingredient.IngredientID;
+        await this.pool.query(values);
+
+        values = 'INSERT INTO Ingredient_Ledger_Entry (Ingredient_ID, Description, Amount) Values(\'' + Ingredient.IngredientID + '\', ' + '\'' + Ingredient.Description + '\', ' + '\'' + Number(Ingredient.subtractIngredientModalAmount * -1) + '\')';
+        await this.pool.query(values);
+    }
+
+    //
+
+    public async GetIngredient(ID: number): Promise <any> {
+        var result: Object;
+        console.log(ID + '      ' + typeof(ID));
+        var rows = await this.pool.query('SELECT * FROM Ingredient WHERE ID = ' + (ID + 1));
+        return rows;
     }
 }

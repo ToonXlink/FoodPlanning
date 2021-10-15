@@ -27,7 +27,7 @@
                         <th>Maßeinheit</th>
                         <th>Category</th>
                         <th>Suchbezeichnung</th>
-                        <th>Aktionen</th>
+                        <th style="width: 10%;">Aktionen</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -48,85 +48,17 @@
                             <td>
                                 <%= IngredientList[i].Searchname%>
                             </td>
-                            <td> <a href="#editEmployeeModal<%=i%>" class="edit" data-toggle="modal"><i
-                                        class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
+                            <td>
+                                <button id="OpensubtractModal" data-toggle="modal" data-target="#SubtractIngredientModal" onclick="OpenSubtractModal('<%= JSON.stringify(IngredientList[i])%>')" style="padding: 0; border: none; background: none;">
+                                    <i class="bi bi-dash-circle text-danger" title="Subtract" style="font-size: 18px;"></i></button>
+
+                                <button id="OpenEditModal" data-toggle="modal" data-target="#EditIngredientModal" onclick="OpenEditModal('<%= JSON.stringify(IngredientList[i])%>')" style="padding: 0; border: none; background: none;">
+                                    <i class="bi bi-pencil-square text-warning" title="Edit" style="font-size: 18px;"></i></button>
+
+                                <button id="OpenAddModal" data-toggle="modal" data-target="#AddIngredientModal" onclick="OpenAddModal('<%= JSON.stringify(IngredientList[i])%>')" style="padding: 0; border: none; background: none;">
+                                    <i class="bi bi-plus-circle text-success" title="Add" style="font-size: 18px;"></i></button>
                             </td>
                         </tr>
-                        <!-- Edit Modal HTML -->
-                        <div id="editEmployeeModal<%=i%>" class="modal fade">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <form id="<%='EditFormElem' + '' + i %>" method="POST" action="/Zutaten">
-                                        <div class="modal-header">
-                                            <h4 class="modal-title">Zutat Bearbeiten</h4>
-                                        </div>
-                                        <input type="text" name="ID" id="ID" hidden value="<%=IngredientList[i].ID%>">
-                                        <div class="modal-body">
-                                            <div class="form-group">
-                                                <label for="InputDescription">Bezeichnung</label>
-                                                <input type="text" class="form-control" id="InputDescription"
-                                                    name="InputDescription" value="<%=IngredientList[i].Description%>"
-                                                    required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="UnitOfMeasurement">Masseinheit</label>
-                                                <select name="UnitOfMeasurement" id="UnitOfMeasurement"
-                                                    class="form-control" required>
-                                                    <% for(var x=0; x < UnitOfMeasurement.length; x++){%>
-                                                        <% if (x==IngredientList[i].UnitOfMeasurement - 1) {%>
-                                                            <option value="<%= UnitOfMeasurement[x].ID%>"
-                                                                style="text-align: right;" selected>
-                                                                <%=UnitOfMeasurement[x].Unit%>
-                                                            </option>
-                                                            <% } else { %>
-                                                                <option value="<%= UnitOfMeasurement[x].ID%>"
-                                                                    style="text-align: right;">
-                                                                    <%=UnitOfMeasurement[x].Unit%>
-                                                                </option>
-                                                                <% } %>
-                                                                    <% } %>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="AmountOnStock ">Vorhandene Menge</label>
-                                                <input type="number" class="form-control" id="AmountOnStock "
-                                                    name="AmountOnStock" required min="0"
-                                                    value='<%=IngredientList[i].Amount_on_Stock%>'>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="Category">Kategorie</label>
-                                                <select name="Category" id="Category" class="form-control" required>
-                                                    <% for(var x=0; x < Category.length; x++){%>
-                                                        <% if (x==IngredientList[i].Category - 1) { %>
-                                                            <option value="<%= Category[x].ID%>"
-                                                                style="text-align: right;" selected>
-                                                                <%=Category[x].CATEGORY%>
-                                                            </option>
-                                                            <% } else { %>
-                                                                <option value="<%= Category[x].ID%>"
-                                                                    style="text-align: right;">
-                                                                    <%=Category[x].CATEGORY%>
-                                                                </option>
-                                                                <% }; %>
-                                                                    <% }; %>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="SearchName">Suchbezeichnung</label>
-                                                <input type="text" class="form-control" id="SearchName"
-                                                    name="SearchName" required
-                                                    value="<%=IngredientList[i].Searchname%>">
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <input type="button" class="btn btn-default" data-dismiss="modal"
-                                                value="Cancel">
-                                            <input type="submit" class="btn btn-info" value="Save" onsubmit="PatchData('<%=i%>')">
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
                         <% } %>
                 </tbody>
             </table>
@@ -162,21 +94,31 @@
                         <% } else {%>
                             <ul class="pagination">
                                 <li class="page-item"><a href="<%=Number(Site) - 1%>">Previous</a></li>
-                                <li class="page-item"><a href="<%=Number(Site) - 2%>" class="page-link">
+                                <li class="page-item">
+                                    <a href="<%=Number(Site) - 2%>" class="page-link">
                                         <%=Number(Site) + 1 - 2%>
-                                    </a></li>
-                                <li class="page-item"><a href="<%=Number(Site) - 1%>" class="page-link">
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a href="<%=Number(Site) - 1%>" class="page-link">
                                         <%=Number(Site) + 1 - 1%>
-                                    </a></li>
-                                <li class="page-item active"><a href="<%=Number(Site) + 1%>" class="page-link">
+                                    </a>
+                                </li>
+                                <li class="page-item active">
+                                    <a href="<%=Number(Site) + 1%>" class="page-link">
                                         <%=Number(Site) + 1%>
-                                    </a></li>
-                                <li class="page-item"><a href="<%=Number(Site) + 1%>" class="page-link">
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a href="<%=Number(Site) + 1%>" class="page-link">
                                         <%=Number(Site) + 1 + 1%>
-                                    </a></li>
-                                <li class="page-item"><a href="<%=Number(Site) + 2%>" class="page-link">
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a href="<%=Number(Site) + 2%>" class="page-link">
                                         <%=Number(Site) + 1 + 2%>
-                                    </a></li>
+                                    </a>
+                                </li>
                                 <li class="page-item"><a href="<%=Number(Site) + 1%>" class="page-link">Next</a></li>
                             </ul>
                             <% } %>
@@ -195,8 +137,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="InputDescription">Bezeichnung</label>
-                            <input type="text" class="form-control" id="InputDescription" name="InputDescription"
-                                required onchange="ChangeSearchName()">
+                            <input type="text" class="form-control" id="InputDescription" name="InputDescription" required onchange="ChangeSearchName()">
                         </div>
                         <div class="form-group">
                             <label for="UnitOfMeasurement ">Masseinheit</label>
@@ -211,8 +152,7 @@
                         </div>
                         <div class="form-group">
                             <label for="AmountOnStock ">Vorhandene Menge</label>
-                            <input type="number" class="form-control" id="AmountOnStock " name="AmountOnStock" required
-                                min="0">
+                            <input type="number" class="form-control" id="AmountOnStock " name="AmountOnStock" required min="0">
                         </div>
                         <div class="form-group">
                             <label for="Category">Kategorie</label>
@@ -231,18 +171,221 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                        <input type="submit" class="btn btn-info" value="Save">
+                        <input edit-modal-close type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                        <input edit-modal-save type="submit" class="btn btn-info" value="Save">
                     </div>
                 </form>
             </div>
         </div>
     </div>
+
+    <!-- Edit Modal HTML -->
+    <div id="EditIngredientModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="EditFormElem">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Zutat Bearbeiten</h4>
+                        <input type="text" class="hidden" id="IngredientID" name="IngredientID" style="visibility: hidden;">
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="InputDescription">Bezeichnung</label>
+                            <input type="text" class="form-control" id="IngredientEditDescription" name="InputDescription" value="" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="UnitOfMeasurement">Masseinheit</label>
+                            <select name="UnitOfMeasurement" id="IngredientUnitOfMeasurement" class="form-control" required>
+                                <% for(var x=0; x < UnitOfMeasurement.length; x++){%>
+                                    <option value="<%= UnitOfMeasurement[x].ID%>" style="text-align: right;">
+                                        <%=UnitOfMeasurement[x].Unit%>
+                                    </option>
+                                    <% } %>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="IngredientAmountOnStock ">Vorhandene Menge</label>
+                            <input type="number" class="form-control" id="IngredientAmountOnStock" name="AmountOnStock" required min="0" value=''>
+                        </div>
+                        <div class="form-group">
+                            <label for="Category">Kategorie</label>
+                            <select name="Category" id="IngredientCategory" class="form-control" required>
+                                <% for(var x=0; x < Category.length; x++){%>
+                                    <option value="<%= Category[x].ID%>" style="text-align: right;">
+                                        <%=Category[x].CATEGORY%>
+                                    </option>
+                                    <% }; %>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="SearchName">Suchbezeichnung</label>
+                            <input type="text" class="form-control" id="IngredientSearchName" name="SearchName" required value="">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" id="CloseEditModal">
+                        <input type="button" id="SaveEditModal" class="btn btn-info" value="Save" onclick="PatchData()">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!--AddIngredientModal-->
+    <div id="AddIngredientModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="AddFormElem">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Menge Hinzufügen</h4>
+                        <input type="text" class="hidden" id="IngredientID" name="IngredientID" style="visibility: hidden;">
+                        <input type="text" class="hidden" id="Amount_on_Stock" name="Amount_on_Stock" style="visibility: hidden;">
+                        <input type="text" class="hidden" id="Description" name="Description" style="visibility: hidden;">
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="AddIngredientModalAmount">Wie viel ist dazugekommen?</label>
+                            <input type="number" class="form-control" id="AddIngredientModalAmount" name="AddIngredientModalAmount" value="" min="0" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" id="CloseEditModal">
+                        <input type="button" id="SaveEditModal" class="btn btn-info" value="Save" onclick="AddIngridient()">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!--subtractIngredientModal-->
+    <div id="SubtractIngredientModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="subtractFormElem">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Menge Hinzufügen</h4>
+                        <input type="text" class="hidden" id="IngredientID" name="IngredientID" style="visibility: hidden;">
+                        <input type="text" class="hidden" id="Amount_on_Stock" name="Amount_on_Stock" style="visibility: hidden;">
+                        <input type="text" class="hidden" id="Description" name="Description" style="visibility: hidden;">
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="subtractIngredientModalAmount">Wie viel wurde verbraucht?</label>
+                            <input type="number" class="form-control" id="subtractIngredientModalAmount" name="subtractIngredientModalAmount" value="" min="0" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" id="CloseEditModal">
+                        <input type="button" id="SaveEditModal" class="btn btn-info" value="Save" onclick="SubtractIngredient()">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!--Scripts-->
+    <script>
+    </script>
     <script>
         function ChangeSearchName() {
             document.getElementById(formElem);
             formElem.SearchName.value = formElem.InputDescription.value.toUpperCase();
+        }
+
+        function OpenEditModal(ingredientString) {
+            document.getElementById(EditFormElem)
+            let ingredientJSON = JSON.parse(ingredientString);
+
+            EditFormElem.IngredientID.value = ingredientJSON.ID;
+            EditFormElem.IngredientEditDescription.value = ingredientJSON.Description;
+            EditFormElem.IngredientUnitOfMeasurement.value = ingredientJSON.UnitOfMeasurement;
+            EditFormElem.IngredientAmountOnStock.value = ingredientJSON.Amount_on_Stock;
+            EditFormElem.IngredientCategory.value = ingredientJSON.Category;
+            EditFormElem.IngredientSearchName.value = ingredientJSON.Searchname;
+        }
+
+        function OpenAddModal(ingredientString) {
+            document.getElementById(AddFormElem);
+            let ingredientJSON = JSON.parse(ingredientString);
+
+            AddFormElem.IngredientID.value = ingredientJSON.ID;
+            AddFormElem.Amount_on_Stock.value = ingredientJSON.Amount_on_Stock;
+            AddFormElem.Description.value = ingredientJSON.Description;
+            AddFormElem.AddIngredientModalAmount.value = 0;
+        }
+
+        function OpenSubtractModal(ingredientString) {
+            document.getElementById(subtractFormElem);
+            let ingredientJSON = JSON.parse(ingredientString);
+
+            subtractFormElem.IngredientID.value = ingredientJSON.ID;
+            subtractFormElem.subtractIngredientModalAmount.value = 0;
+            subtractFormElem.Amount_on_Stock.value = ingredientJSON.Amount_on_Stock;
+            subtractFormElem.Description.value = ingredientJSON.Description;
+            subtractFormElem.subtractIngredientModalAmount.max = ingredientJSON.Amount_on_Stock;
+        }
+
+        function PatchData() {
+            document.getElementById(EditFormElem);
+            let formData = new FormData(EditFormElem);
+            const data = new URLSearchParams();
+            formData.forEach((value, key) => data.append(key, value));
+            let request = fetch('' + window.location.href, {
+                method: 'PATCH',
+                body: data,
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                }
+            }).then(({
+                status
+            }) => {
+                if (status == 200) {
+                    console.log('passt');
+                    window.open(window.location.href, "_self");
+                }
+            })
+        }
+
+        function AddIngridient() {
+            document.getElementById(AddFormElem);
+            let formData = new FormData(AddFormElem);
+            const data = new URLSearchParams();
+            formData.forEach((value, key) => data.append(key, value));
+
+            let request = fetch('/Zutaten/AddIngridient', {
+                method: 'PATCH',
+                body: data,
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                }
+            }).then(({
+                status
+            }) => {
+                if (status == 200) {
+                    window.open(window.location.href, "_self");
+                }
+            })
+        }
+
+        function SubtractIngredient() {
+            document.getElementById(subtractFormElem);
+            let formData = new FormData(subtractFormElem);
+            const data = new URLSearchParams();
+            formData.forEach((value, key) => data.append(key, value));
+
+            let request = fetch('/Zutaten/SubtractIngredient', {
+                method: 'PATCH',
+                body: data,
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                }
+            }).then(({
+                status
+            }) => {
+                if (status == 200) {
+                    window.open(window.location.href, "_self");
+                }
+            })
         }
     </script>
 </body>

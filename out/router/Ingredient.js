@@ -53,16 +53,31 @@ router
     res.redirect('/Zutaten/0');
 })
     .post(function (req, res) {
-    console.log(req);
-    console.log(res);
+    //console.log(req)
+    //console.log(res)
+});
+router
+    .use(express_1.default.static(path_1.default.join(__dirname, '../../', '/public')))
+    .route('/AddIngridient')
+    .patch(function (req, res) {
+    console.log(req.body);
+    res.status(200).send('passt');
+    data.AddIngredientAmount(req.body);
+});
+router
+    .use(express_1.default.static(path_1.default.join(__dirname, '../../', '/public')))
+    .route('/SubtractIngredient')
+    .patch(function (req, res) {
+    console.log(req.body);
+    res.status(200).send('passt');
+    data.SubtractIngredientAmount(req.body);
 });
 router
     .use(express_1.default.static(path_1.default.join(__dirname, '../../', '/public')))
     .use(express_1.default.static(path_1.default.join(__dirname, '../../../', '/public')))
     .route('/:Category/:Site')
     .get(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, _b, _c;
-    var _d;
+    var _a, _b, _c, _d;
     return __generator(this, function (_e) {
         switch (_e.label) {
             case 0:
@@ -96,21 +111,25 @@ router
     });
 }); })
     .post(function (req, res) {
-    console.log(req.body);
+    //console.log(req.body);
     if (req.body.InputDescription != '' && req.body.UnitOfMeasurement != '' && req.body.AmountOnStock != '' && req.body.Category != '' && req.body.SearchName != '') {
         data.AddIngredient(req.body);
     }
     else {
         res.status(418).send("Sry but your Input is wrong");
     }
-    res.redirect('/Zutaten/' + req.params.Site);
+    res.redirect('/Zutaten/' + req.params.Category + '/' + req.params.Site);
+})
+    .patch(function (req, res) {
+    console.log(req.body);
+    res.status(200).send('passt');
+    data.UpdateIngredient(req.body);
 });
 router
     .use(express_1.default.static(path_1.default.join(__dirname, '../../', '/public')))
     .route('/:Site')
     .get(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, _b, _c;
-    var _d;
+    var _a, _b, _c, _d;
     return __generator(this, function (_e) {
         switch (_e.label) {
             case 0:
@@ -138,13 +157,14 @@ router
                 return [3 /*break*/, 6];
             case 5:
                 res.redirect('/Zutaten/0');
+                res.status(200).send('L');
                 _e.label = 6;
             case 6: return [2 /*return*/];
         }
     });
 }); })
     .post(function (req, res) {
-    console.log(req.body);
+    //console.log(req.body);
     if (req.body.InputDescription != '' && req.body.UnitOfMeasurement != '' && req.body.AmountOnStock != '' && req.body.Category != '' && req.body.SearchName != '') {
         data.AddIngredient(req.body);
     }
@@ -152,5 +172,10 @@ router
         res.status(418).send("Sry but your Input is wrong");
     }
     res.redirect('/Zutaten/' + req.params.Site);
+})
+    .patch(function (req, res) {
+    console.log(req.body);
+    res.status(200).send('passt');
+    data.UpdateIngredient(req.body);
 });
 exports.default = router;

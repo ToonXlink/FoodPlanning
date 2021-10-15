@@ -13,10 +13,23 @@ router
     .get((req, res) => {
         res.redirect('/Zutaten/0')
     })
-    .post((req, res) => {
-        console.log(req)
-        console.log(res)
+
+router
+    .use(express.static(path.join(__dirname, '../../', '/public')))
+    .route('/AddIngridient')
+    .patch((req, res) => {
+        res.status(200).send('passt');
+        data.AddIngredientAmount(req.body);
     })
+
+router
+    .use(express.static(path.join(__dirname, '../../', '/public')))
+    .route('/SubtractIngredient')
+    .patch((req, res) => {
+        res.status(200).send('passt');
+        data.SubtractIngredientAmount(req.body);
+    })
+
 router
     .use(express.static(path.join(__dirname, '../../', '/public')))
     .use(express.static(path.join(__dirname, '../../../', '/public')))
@@ -37,13 +50,16 @@ router
         }
     })
     .post((req, res) => {
-        console.log(req.body);
         if (req.body.InputDescription != '' && req.body.UnitOfMeasurement != '' && req.body.AmountOnStock != '' && req.body.Category != '' && req.body.SearchName != '') {
             data.AddIngredient(req.body)
         } else {
             res.status(418).send("Sry but your Input is wrong")
         }
-        res.redirect('/Zutaten/' + req.params.Site);
+        res.redirect('/Zutaten/' + req.params.Category + '/' + req.params.Site);
+    })
+    .patch((req, res) => {
+        res.status(200).send('passt');
+        data.UpdateIngredient(req.body);
     })
 router
     .use(express.static(path.join(__dirname, '../../', '/public')))
@@ -61,15 +77,19 @@ router
             })
         } else {
             res.redirect('/Zutaten/0')
+            res.status(200).send('L')
         }
     })
     .post((req, res) => {
-        console.log(req.body);
         if (req.body.InputDescription != '' && req.body.UnitOfMeasurement != '' && req.body.AmountOnStock != '' && req.body.Category != '' && req.body.SearchName != '') {
             data.AddIngredient(req.body)
         } else {
             res.status(418).send("Sry but your Input is wrong")
         }
         res.redirect('/Zutaten/' + req.params.Site);
+    })
+    .patch((req, res) => {
+        res.status(200).send('passt');
+        data.UpdateIngredient(req.body);
     })
 export default router;

@@ -4,9 +4,10 @@ import {Data} from './models/Data';
 import Ingredient from './router/Ingredient';
 import Purchase from './router/Purchase';
 import Recipe from './router/Recipe';
+import IngredientDate from './router/Data';
 
 const app = express();
-const port = 3001;
+const port = 3002;
 const data = Data.getInstance();
 
 app.use(express.static(path.join(__dirname, '../', '/public')));
@@ -21,6 +22,7 @@ app.use((req, res, next) => {
 app.use('/Zutaten', Ingredient);
 app.use('/Einkauf', Purchase);
 app.use('/Rezepte', Recipe);
+app.use('/IngredientData', IngredientDate);
 
 app.get('/',async (req, res) => {
   res.render('Index.ejs', {
@@ -34,5 +36,5 @@ app.post('/', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://192.168.0.146:${port}`)
+  console.log(`Example app listening at http://192.168.0.100:${port}`)
 });

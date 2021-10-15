@@ -45,8 +45,9 @@ var Data_1 = require("./models/Data");
 var Ingredient_1 = __importDefault(require("./router/Ingredient"));
 var Purchase_1 = __importDefault(require("./router/Purchase"));
 var Recipe_1 = __importDefault(require("./router/Recipe"));
+var Data_2 = __importDefault(require("./router/Data"));
 var app = express_1.default();
-var port = 3001;
+var port = 3002;
 var data = Data_1.Data.getInstance();
 app.use(express_1.default.static(path_1.default.join(__dirname, '../', '/public')));
 app.set('views', path_1.default.join(__dirname, '../', 'views'));
@@ -58,9 +59,9 @@ app.use(function (req, res, next) {
 app.use('/Zutaten', Ingredient_1.default);
 app.use('/Einkauf', Purchase_1.default);
 app.use('/Rezepte', Recipe_1.default);
+app.use('/IngredientData', Data_2.default);
 app.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, _b, _c;
-    var _d;
+    var _a, _b, _c, _d;
     return __generator(this, function (_e) {
         switch (_e.label) {
             case 0:
@@ -81,5 +82,5 @@ app.post('/', function (req, res) {
     console.log('jo da ist was angekommen');
 });
 app.listen(port, function () {
-    console.log("Example app listening at http://192.168.0.146:" + port);
+    console.log("Example app listening at http://192.168.0.100:" + port);
 });

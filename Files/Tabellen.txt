@@ -16,6 +16,8 @@ CATEGORY VARCHAR(255) NOT NULL
 
 CREATE TABLE Ingredient_Ledger_Entry (
 ID INT AUTO_INCREMENT PRIMARY KEY,
+Ingredient_ID INT NOT NULL,
+FOREIGN KEY (Ingredient_ID) REFERENCES Ingredient(ID),
 Description VARCHAR(255) NOT NULL,
 Amount DECIMAL (10, 3) NOT NULL
 );
@@ -65,4 +67,7 @@ Category ENUM ('Gemüse', 'Obst', 'Soßen', 'Fleisch', 'Gewürze', 'Fertigproduk
 Unit_of_Measurement ENUM('Packungen', 'Flaschen', 'Dosen', 'g', 'l', 'Tüten', 'Stück', 'Bünde') NOT NULL,
 Category ENUM ('Fisch', 'Geflügel', 'Hülsenfrüchte', 'Paste & Nudeln', 'Pizza', 'Rind', 'Schwein', 'Reis') NOT NULL
 
+INSERT INTO Unit_of_Measurement (Unit, Mass, Volume) VALUES ("g", 1, NULL), ("ml", NULL, 1);
+INSERT INTO Ingredient_Category (CATEGORY) VALUES ('Gemüse'), ('Obst'), ('Soßen'), ('Fleisch'), ('Gewürze'), ('Fertigprodukte'), ('Fisch'), ('Brotaufstrich'), ('Getreide'), ('Tiefkühlprodukte'), ('Eierprodukte'), ('Fette/ Öle');
+INSERT INTO Recipe_Category (CATEGORY) VALUES ('Fisch');
 https://www.youtube.com/watch?v=tkN9Thygl0c
